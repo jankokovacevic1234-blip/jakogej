@@ -1,0 +1,267 @@
+import React, { useState } from 'react';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
+import { supabase } from '../lib/supabase';
+
+const CartPage: React.FC = () => {
+  const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
+  const [email, setEmail] = useState('');
+  const [discountCode, setDiscountCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
+  const [orderCode, setOrderCode] = useState('');
+
+  const generateOrderCode = () => {
+    return 'GM-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+  };
+
+  const applyDiscountCode = async () => {
+    if (!discountCode) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('discount_codes')
+        .select('*')
+        .eq('code', discountCode)
+        .eq('is_active', true)
+        .single();
+
+      if (error || !data) {
+        alert('Invalid or expired discount code');
+        return;
+      }
+
+      setDiscount(data.discount_percentage);
+      alert(`Discount applied! ${data.discount_percentage}% off`);
+    } catch (error) {
+      alert('Error applying discount code');
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (!email || items.length === 0) return;
+
+    setLoading(true);
+    const code = generateOrderCode();
+    const total = getTotalPrice() * (1 - discount / 100);
+
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .insert({
+          order_code: code,
+          items: items,
+          total_amount: total,
+          customer_email: email,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
+      setOrderCode(code);
+      setOrderComplete(true);
+      clearCart();
+    } catch (error) {
+      console.error('Error creating order:', error);
+      alert('Error processing order. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (orderComplete) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ShoppingBag className="w-8 h-8 text-green-600" />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Order Confirmed!</h2>
+            <p className="text-gray-600 mb-6">
+              Your order has been successfully created. Please contact us on Telegram with your order code.
+            </p>
+            <div className="bg-gray-100 rounded-lg p-4 mb-6">
+              <p className="text-sm text-gray-600 mb-2">Your Order Code:</p>
+              <p className="text-2xl font-bold text-blue-600 font-mono">{orderCode}</p>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <p className="text-blue-800 font-medium">Next Steps:</p>
+              <p className="text-blue-700 mt-2">
+                Send your order code <strong>{orderCode}</strong> to our Telegram: <strong>@koh0o</strong>
+              </p>
+            </div>
+            <button
+              onClick={() => window.location.href = '/'}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+            >
+              Continue Shopping
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <ShoppingBag className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
+            <p className="text-gray-600 mb-6">Add some products to your cart to get started.</p>
+            <button
+              onClick={() => window.location.href = '/'}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+            >
+              Browse Products
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const subtotal = getTotalPrice();
+  const discountAmount = subtotal * (discount / 100);
+  const total = subtotal - discountAmount;
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Cart Items */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="p-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-6">Cart Items</h2>
+                <div className="space-y-4">
+                  {items.map(item => (
+                    <div key={item.product.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                      <img
+                        src={item.product.image_url}
+                        alt={item.product.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div className="flex-1">
+                        <h3 className="font-medium text-gray-900">{item.product.name}</h3>
+                        <p className="text-sm text-gray-600">{item.product.price.toFixed(0)} RSD each</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                          className="p-1 text-gray-500 hover:text-gray-700"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <span className="w-8 text-center font-medium">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                          className="p-1 text-gray-500 hover:text-gray-700"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">{(item.product.price * item.quantity).toFixed(0)} RSD</p>
+                        <button
+                          onClick={() => removeFromCart(item.product.id)}
+                          className="text-red-500 hover:text-red-700 mt-1"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Checkout */}
+          <div className="space-y-6">
+            {/* Discount Code */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Discount Code</h3>
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  placeholder="Enter code"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={applyDiscountCode}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
+                >
+                  Apply
+                </button>
+              </div>
+              {discount > 0 && (
+                <p className="text-green-600 text-sm mt-2">✓ {discount}% discount applied</p>
+              )}
+            </div>
+
+            {/* Order Summary */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Order Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Subtotal</span>
+                  <span className="font-medium">{subtotal.toFixed(0)} RSD</span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount ({discount}%)</span>
+                    <span>-{discountAmount.toFixed(0)} RSD</span>
+                  </div>
+                )}
+                <hr />
+                <div className="flex justify-between text-lg font-bold">
+                  <span>Total</span>
+                  <span>{total.toFixed(0)} RSD</span>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="your@email.com"
+                  required
+                />
+              </div>
+
+              <button
+                onClick={handleCheckout}
+                disabled={!email || loading}
+                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+              >
+                {loading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  <>
+                    <span>Complete Order</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CartPage;
