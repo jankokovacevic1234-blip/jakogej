@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Filter, Search, X, ShoppingCart } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
+import { supabase } from '../lib/supabase';
 
 const HomePage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
