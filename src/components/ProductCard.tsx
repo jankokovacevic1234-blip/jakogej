@@ -26,11 +26,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case 'accounts':
-        return 'Gaming Accounts';
+        return 'Gaming Nalozi';
       case 'subscriptions':
-        return 'Subscriptions';
+        return 'Pretplate';
       case 'addons':
-        return 'Add-ons';
+        return 'Dodaci';
       default:
         return category;
     }
@@ -73,7 +73,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
           >
             <ShoppingCart className="w-4 h-4" />
-            <span>Add to Cart</span>
+            <span>Dodaj u Korpu</span>
           </button>
         </div>
       </div>

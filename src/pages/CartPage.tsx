@@ -78,25 +78,25 @@ const CartPage: React.FC = () => {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShoppingBag className="w-8 h-8 text-green-600" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Order Confirmed!</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Porudžbina Potvrđena!</h2>
             <p className="text-gray-600 mb-6">
-              Your order has been successfully created. Please contact us on Telegram with your order code.
+              Vaša porudžbina je uspešno kreirana. Molimo kontaktirajte nas na Telegramu sa vašim kodom porudžbine.
             </p>
             <div className="bg-gray-100 rounded-lg p-4 mb-6">
-              <p className="text-sm text-gray-600 mb-2">Your Order Code:</p>
+              <p className="text-sm text-gray-600 mb-2">Vaš Kod Porudžbine:</p>
               <p className="text-2xl font-bold text-blue-600 font-mono">{orderCode}</p>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <p className="text-blue-800 font-medium">Next Steps:</p>
+              <p className="text-blue-800 font-medium">Sledeći Koraci:</p>
               <p className="text-blue-700 mt-2">
-                Send your order code <strong>{orderCode}</strong> to our Telegram: <strong>@koh0o</strong>
+                Pošaljite vaš kod porudžbine <strong>{orderCode}</strong> na naš Telegram: <strong>@koh0o</strong>
               </p>
             </div>
             <button
               onClick={() => window.location.href = '/'}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
-              Continue Shopping
+              Nastavi Kupovinu
             </button>
           </div>
         </div>
@@ -110,13 +110,13 @@ const CartPage: React.FC = () => {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-xl shadow-lg p-8">
             <ShoppingBag className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">Add some products to your cart to get started.</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Vaša korpa je prazna</h2>
+            <p className="text-gray-600 mb-6">Dodajte proizvode u korpu da biste počeli.</p>
             <button
               onClick={() => window.location.href = '/'}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
-              Browse Products
+              Pregledaj Proizvode
             </button>
           </div>
         </div>
@@ -131,14 +131,14 @@ const CartPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Korpa za Kupovinu</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Cart Items</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">Stavke u Korpi</h2>
                 <div className="space-y-4">
                   {items.map(item => (
                     <div key={item.product.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
@@ -186,11 +186,11 @@ const CartPage: React.FC = () => {
           <div className="space-y-6">
             {/* Discount Code */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Discount Code</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Kod za Popust</h3>
               <div className="flex space-x-2">
                 <input
                   type="text"
-                  placeholder="Enter code"
+                  placeholder="Unesite kod"
                   value={discountCode}
                   onChange={(e) => setDiscountCode(e.target.value)}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -199,45 +199,45 @@ const CartPage: React.FC = () => {
                   onClick={applyDiscountCode}
                   className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
                 >
-                  Apply
+                  Primeni
                 </button>
               </div>
               {discount > 0 && (
-                <p className="text-green-600 text-sm mt-2">✓ {discount}% discount applied</p>
+                <p className="text-green-600 text-sm mt-2">✓ {discount}% popust primenjen</p>
               )}
             </div>
 
             {/* Order Summary */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Order Summary</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Pregled Porudžbine</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
+                  <span className="text-gray-600">Međuzbir</span>
                   <span className="font-medium">{subtotal.toFixed(0)} RSD</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-green-600">
-                    <span>Discount ({discount}%)</span>
+                    <span>Popust ({discount}%)</span>
                     <span>-{discountAmount.toFixed(0)} RSD</span>
                   </div>
                 )}
                 <hr />
                 <div className="flex justify-between text-lg font-bold">
-                  <span>Total</span>
+                  <span>Ukupno</span>
                   <span>{total.toFixed(0)} RSD</span>
                 </div>
               </div>
 
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
+                  Email Adresa
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="your@email.com"
+                  placeholder="vas@email.com"
                   required
                 />
               </div>
@@ -251,7 +251,7 @@ const CartPage: React.FC = () => {
                   <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                 ) : (
                   <>
-                    <span>Complete Order</span>
+                    <span>Završi Porudžbinu</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}

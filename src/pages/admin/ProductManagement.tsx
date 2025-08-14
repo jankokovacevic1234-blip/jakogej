@@ -123,13 +123,13 @@ const ProductManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Product Management</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Upravljanje Proizvodima</h2>
         <button
           onClick={() => setShowAddForm(true)}
           className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Product</span>
+          <span>Dodaj Proizvod</span>
         </button>
       </div>
 
@@ -138,7 +138,7 @@ const ProductManagement: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-6">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-gray-900">
-              {editingProduct ? 'Edit Product' : 'Add New Product'}
+              {editingProduct ? 'Uredi Proizvod' : 'Dodaj Novi Proizvod'}
             </h3>
             <button
               onClick={resetForm}
@@ -151,7 +151,7 @@ const ProductManagement: React.FC = () => {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Product Name
+                Naziv Proizvoda
               </label>
               <input
                 type="text"
@@ -164,7 +164,7 @@ const ProductManagement: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Price (RSD)
+                Cena (RSD)
               </label>
               <input
                 type="number"
@@ -179,22 +179,22 @@ const ProductManagement: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category
+                Kategorija
               </label>
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="accounts">Gaming Accounts</option>
-                <option value="subscriptions">Subscriptions</option>
-                <option value="addons">Add-ons</option>
+                <option value="accounts">Gaming Nalozi</option>
+                <option value="subscriptions">Pretplate</option>
+                <option value="addons">Dodaci</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Image URL
+                URL Slike
               </label>
               <input
                 type="url"
@@ -207,7 +207,7 @@ const ProductManagement: React.FC = () => {
 
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
+                Opis
               </label>
               <textarea
                 value={formData.description}
@@ -224,14 +224,14 @@ const ProductManagement: React.FC = () => {
                 onClick={resetForm}
                 className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
               >
-                Cancel
+                Otkaži
               </button>
               <button
                 type="submit"
                 className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
               >
                 <Save className="w-4 h-4" />
-                <span>{editingProduct ? 'Update' : 'Add'} Product</span>
+                <span>{editingProduct ? 'Ažuriraj' : 'Dodaj'} Proizvod</span>
               </button>
             </div>
           </form>
@@ -245,16 +245,16 @@ const ProductManagement: React.FC = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product
+                  Proizvod
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
+                  Kategorija
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Price
+                  Cena
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                  Akcije
                 </th>
               </tr>
             </thead>

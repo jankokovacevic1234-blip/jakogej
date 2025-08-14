@@ -130,13 +130,13 @@ const DiscountManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Discount Code Management</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Upravljanje Kodovima za Popust</h2>
         <button
           onClick={() => setShowAddForm(true)}
           className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Discount Code</span>
+          <span>Dodaj Kod za Popust</span>
         </button>
       </div>
 
@@ -145,7 +145,7 @@ const DiscountManagement: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-6">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-gray-900">
-              {editingCode ? 'Edit Discount Code' : 'Add New Discount Code'}
+              {editingCode ? 'Uredi Kod za Popust' : 'Dodaj Novi Kod za Popust'}
             </h3>
             <button
               onClick={resetForm}
@@ -158,7 +158,7 @@ const DiscountManagement: React.FC = () => {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Discount Code
+                Kod za Popust
               </label>
               <input
                 type="text"
@@ -172,7 +172,7 @@ const DiscountManagement: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Discount Percentage (%)
+                Procenat Popusta (%)
               </label>
               <input
                 type="number"
@@ -188,7 +188,7 @@ const DiscountManagement: React.FC = () => {
 
             <div className="flex items-center">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Active Status
+                Status Aktivnosti
               </label>
               <div className="flex items-center mt-2">
                 <input
@@ -198,7 +198,7 @@ const DiscountManagement: React.FC = () => {
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <span className="ml-2 text-sm text-gray-700">
-                  {formData.is_active ? 'Active' : 'Inactive'}
+                  {formData.is_active ? 'Aktivan' : 'Neaktivan'}
                 </span>
               </div>
             </div>
@@ -209,14 +209,14 @@ const DiscountManagement: React.FC = () => {
                 onClick={resetForm}
                 className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
               >
-                Cancel
+                Otkaži
               </button>
               <button
                 type="submit"
                 className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
               >
                 <Save className="w-4 h-4" />
-                <span>{editingCode ? 'Update' : 'Add'} Code</span>
+                <span>{editingCode ? 'Ažuriraj' : 'Dodaj'} Kod</span>
               </button>
             </div>
           </form>
@@ -230,19 +230,19 @@ const DiscountManagement: React.FC = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Code
+                  Kod
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Discount
+                  Popust
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Created
+                  Kreiran
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                  Akcije
                 </th>
               </tr>
             </thead>
@@ -272,7 +272,7 @@ const DiscountManagement: React.FC = () => {
                         <ToggleLeft className="w-5 h-5" />
                       )}
                       <span className="text-sm">
-                        {code.is_active ? 'Active' : 'Inactive'}
+                        {code.is_active ? 'Aktivan' : 'Neaktivan'}
                       </span>
                     </button>
                   </td>
@@ -301,7 +301,7 @@ const DiscountManagement: React.FC = () => {
 
         {discountCodes.length === 0 && (
           <div className="p-8 text-center text-gray-500">
-            No discount codes found. Create your first discount code to get started.
+            Nema pronađenih kodova za popust. Kreirajte vaš prvi kod za popust da počnete.
           </div>
         )}
       </div>

@@ -53,10 +53,10 @@ const HomePage: React.FC = () => {
   };
 
   const categories = [
-    { id: 'all', name: 'All Products' },
-    { id: 'accounts', name: 'Gaming Accounts' },
-    { id: 'subscriptions', name: 'Subscriptions' },
-    { id: 'addons', name: 'Add-ons' }
+    { id: 'all', name: 'Svi Proizvodi' },
+    { id: 'accounts', name: 'Gaming Nalozi' },
+    { id: 'subscriptions', name: 'Pretplate' },
+    { id: 'addons', name: 'Dodaci' }
   ];
 
   if (loading) {
@@ -64,7 +64,7 @@ const HomePage: React.FC = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading products...</p>
+          <p className="mt-4 text-gray-600">Učitavanje proizvoda...</p>
         </div>
       </div>
     );
@@ -75,17 +75,17 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold mb-6">Welcome to GmShop</h1>
+          <h1 className="text-5xl font-bold mb-6">Dobrodošli u GmShop</h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Your premium destination for gaming accounts, subscriptions, and exclusive add-ons. 
-            Quality guaranteed, instant delivery.
+            Vaša premium destinacija za gaming naloge, pretplate i ekskluzivne dodatke. 
+            Garantovan kvalitet, trenutna dostava.
           </p>
           <div className="flex justify-center">
             <div className="relative max-w-md w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Pretražite proizvode..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -101,7 +101,7 @@ const HomePage: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between mb-8">
           <div className="flex items-center space-x-2 mb-4 md:mb-0">
             <Filter className="w-5 h-5 text-gray-600" />
-            <span className="font-medium text-gray-700">Filter by category:</span>
+            <span className="font-medium text-gray-700">Filtriraj po kategoriji:</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {categories.map(category => (
@@ -132,9 +132,9 @@ const HomePage: React.FC = () => {
             <div className="text-gray-400 mb-4">
               <Search className="w-16 h-16 mx-auto" />
             </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No products found</h3>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">Nema pronađenih proizvoda</h3>
             <p className="text-gray-600">
-              {searchQuery ? 'Try adjusting your search terms' : 'Check back later for new products'}
+              {searchQuery ? 'Pokušajte da prilagodite termine pretrage' : 'Proverite ponovo kasnije za nove proizvode'}
             </p>
           </div>
         )}

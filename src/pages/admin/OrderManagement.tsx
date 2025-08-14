@@ -85,9 +85,9 @@ const OrderManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Order Management</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Upravljanje Porudžbinama</h2>
         <div className="text-sm text-gray-600">
-          Total Orders: {orders.length}
+          Ukupno Porudžbina: {orders.length}
         </div>
       </div>
 
@@ -95,7 +95,7 @@ const OrderManagement: React.FC = () => {
         {/* Orders List */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="p-6 border-b">
-            <h3 className="text-lg font-bold text-gray-900">All Orders</h3>
+            <h3 className="text-lg font-bold text-gray-900">Sve Porudžbine</h3>
           </div>
           <div className="max-h-96 overflow-y-auto">
             {orders.map((order) => (
@@ -127,7 +127,7 @@ const OrderManagement: React.FC = () => {
             ))}
             {orders.length === 0 && (
               <div className="p-8 text-center text-gray-500">
-                No orders found
+                Nema pronađenih porudžbina
               </div>
             )}
           </div>
@@ -139,28 +139,28 @@ const OrderManagement: React.FC = () => {
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">Order Details</h3>
+                  <h3 className="text-lg font-bold text-gray-900">Detalji Porudžbine</h3>
                   <p className="text-sm text-gray-600">#{selectedOrder.order_code}</p>
                 </div>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => updateOrderStatus(selectedOrder.id, 'completed')}
                     className="text-green-600 hover:text-green-800"
-                    title="Mark as completed"
+                    title="Označi kao završeno"
                   >
                     <CheckCircle className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')}
                     className="text-red-600 hover:text-red-800"
-                    title="Mark as cancelled"
+                    title="Označi kao otkazano"
                   >
                     <XCircle className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => deleteOrder(selectedOrder.id)}
                     className="text-red-600 hover:text-red-800"
-                    title="Delete order"
+                    title="Obriši porudžbinu"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
@@ -169,7 +169,7 @@ const OrderManagement: React.FC = () => {
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Customer Email:</label>
+                  <label className="text-sm font-medium text-gray-700">Email Kupca:</label>
                   <p className="text-gray-900">{selectedOrder.customer_email}</p>
                 </div>
 
@@ -181,17 +181,17 @@ const OrderManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Total Amount:</label>
+                  <label className="text-sm font-medium text-gray-700">Ukupan Iznos:</label>
                   <p className="text-xl font-bold text-gray-900">{selectedOrder.total_amount.toFixed(0)} RSD</p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Order Date:</label>
+                  <label className="text-sm font-medium text-gray-700">Datum Porudžbine:</label>
                   <p className="text-gray-900">{new Date(selectedOrder.created_at).toLocaleString()}</p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">Items Ordered:</label>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">Poručene Stavke:</label>
                   <div className="space-y-3">
                     {selectedOrder.items.map((item, index) => (
                       <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
@@ -215,9 +215,9 @@ const OrderManagement: React.FC = () => {
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-blue-800 font-medium">Instructions for Customer:</p>
+                  <p className="text-blue-800 font-medium">Instrukcije za Kupca:</p>
                   <p className="text-blue-700 mt-1">
-                    Customer should message <strong>@koh0o</strong> on Telegram with order code <strong>{selectedOrder.order_code}</strong>
+                    Kupac treba da pošalje poruku na <strong>@koh0o</strong> na Telegramu sa kodom porudžbine <strong>{selectedOrder.order_code}</strong>
                   </p>
                 </div>
               </div>
@@ -225,7 +225,7 @@ const OrderManagement: React.FC = () => {
           ) : (
             <div className="p-8 text-center text-gray-500">
               <Eye className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p>Select an order to view details</p>
+              <p>Izaberite porudžbinu da vidite detalje</p>
             </div>
           )}
         </div>

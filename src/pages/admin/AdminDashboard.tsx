@@ -65,25 +65,25 @@ const AdminDashboard: React.FC = () => {
 
   const statCards = [
     {
-      title: 'Total Products',
+      title: 'Ukupno Proizvoda',
       value: stats.totalProducts,
       icon: Package,
       color: 'bg-blue-500',
     },
     {
-      title: 'Total Orders',
+      title: 'Ukupno Porudžbina',
       value: stats.totalOrders,
       icon: ShoppingCart,
       color: 'bg-green-500',
     },
     {
-      title: 'Revenue',
+      title: 'Prihod',
       value: `${stats.totalRevenue.toFixed(0)} RSD`,
       icon: DollarSign,
       color: 'bg-yellow-500',
     },
     {
-      title: 'Pending Orders',
+      title: 'Porudžbine na Čekanju',
       value: stats.pendingOrders,
       icon: Users,
       color: 'bg-purple-500',
@@ -91,10 +91,10 @@ const AdminDashboard: React.FC = () => {
   ];
 
   const tabs = [
-    { id: 'overview', name: 'Overview', icon: BarChart3 },
-    { id: 'products', name: 'Products', icon: Package },
-    { id: 'orders', name: 'Orders', icon: ShoppingCart },
-    { id: 'discounts', name: 'Discount Codes', icon: Settings },
+    { id: 'overview', name: 'Pregled', icon: BarChart3 },
+    { id: 'products', name: 'Proizvodi', icon: Package },
+    { id: 'orders', name: 'Porudžbine', icon: ShoppingCart },
+    { id: 'discounts', name: 'Kodovi za Popust', icon: Settings },
   ];
 
   const renderContent = () => {
@@ -125,28 +125,28 @@ const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Brze Akcije</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button
                   onClick={() => setActiveTab('products')}
                   className="flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
                 >
                   <Plus className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium text-blue-900">Add New Product</span>
+                  <span className="font-medium text-blue-900">Dodaj Novi Proizvod</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('orders')}
                   className="flex items-center space-x-3 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
                 >
                   <ShoppingCart className="w-5 h-5 text-green-600" />
-                  <span className="font-medium text-green-900">Manage Orders</span>
+                  <span className="font-medium text-green-900">Upravljaj Porudžbinama</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('discounts')}
                   className="flex items-center space-x-3 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
                 >
                   <Settings className="w-5 h-5 text-purple-600" />
-                  <span className="font-medium text-purple-900">Discount Codes</span>
+                  <span className="font-medium text-purple-900">Kodovi za Popust</span>
                 </button>
               </div>
             </div>
@@ -163,14 +163,14 @@ const AdminDashboard: React.FC = () => {
           <div className="flex justify-between items-center py-6">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">GmShop Admin</h1>
-              <p className="text-sm text-gray-600">Manage your store</p>
+              <p className="text-sm text-gray-600">Upravljajte vašom prodavnicom</p>
             </div>
             <button
               onClick={logout}
               className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span>Logout</span>
+              <span>Odjavi se</span>
             </button>
           </div>
         </div>

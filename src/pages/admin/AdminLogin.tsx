@@ -32,21 +32,21 @@ const AdminLogin: React.FC = () => {
           <div className="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center">
             <Shield className="h-8 w-8 text-white" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">Admin Login</h2>
-          <p className="mt-2 text-gray-400">Sign in to your admin account</p>
+          <h2 className="mt-6 text-3xl font-bold text-white">Admin Prijava</h2>
+          <p className="mt-2 text-gray-400">Prijavite se na vaš admin nalog</p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
             <div className="bg-red-500 bg-opacity-10 border border-red-500 text-red-400 px-4 py-3 rounded-lg">
-              {error}
+              Neispravni podaci za prijavu
             </div>
           )}
 
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300">
-                Email Address
+                Email Adresa
               </label>
               <input
                 id="email"
@@ -56,13 +56,13 @@ const AdminLogin: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your email"
+                placeholder="Unesite vaš email"
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                Password
+                Lozinka
               </label>
               <div className="relative">
                 <input
@@ -73,7 +73,7 @@ const AdminLogin: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="mt-1 block w-full px-3 py-2 pr-10 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your password"
+                  placeholder="Unesite vašu lozinku"
                 />
                 <button
                   type="button"
@@ -90,7 +90,7 @@ const AdminLogin: React.FC = () => {
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900 transition-colors"
           >
-            Sign In
+            Prijavite se
           </button>
         </form>
       </div>

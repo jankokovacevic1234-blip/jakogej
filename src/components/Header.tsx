@@ -16,16 +16,16 @@ const Header: React.FC = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">GmShop</h1>
-              <p className="text-sm text-gray-600">Premium Gaming Store</p>
+              <p className="text-sm text-gray-600">Premium Gaming Prodavnica</p>
             </div>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-              Products
+              Proizvodi
             </Link>
             <Link to="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-              Contact
+              Kontakt
             </Link>
           </nav>
 
