@@ -10,7 +10,10 @@ const DiscountManagement: React.FC = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     code: '',
+    discount_type: 'percentage' as 'percentage' | 'fixed',
     discount_percentage: '',
+    fixed_amount: '',
+    max_usage: '',
     is_active: true
   });
 
@@ -37,7 +40,10 @@ const DiscountManagement: React.FC = () => {
   const resetForm = () => {
     setFormData({
       code: '',
+      discount_type: 'percentage',
       discount_percentage: '',
+      fixed_amount: '',
+      max_usage: '',
       is_active: true
     });
     setEditingCode(null);
@@ -49,7 +55,10 @@ const DiscountManagement: React.FC = () => {
     
     const codeData = {
       code: formData.code.toUpperCase(),
+      discount_type: formData.discount_type,
       discount_percentage: parseFloat(formData.discount_percentage),
+      fixed_amount: parseFloat(formData.fixed_amount) || 0,
+      max_usage: formData.max_usage ? parseInt(formData.max_usage) : null,
       is_active: formData.is_active
     };
 
@@ -81,7 +90,10 @@ const DiscountManagement: React.FC = () => {
     setEditingCode(code);
     setFormData({
       code: code.code,
+      discount_type: code.discount_type,
       discount_percentage: code.discount_percentage.toString(),
+      fixed_amount: code.fixed_amount.toString(),
+      max_usage: code.max_usage?.toString() || '',
       is_active: code.is_active
     });
     setShowAddForm(true);
@@ -172,21 +184,66 @@ const DiscountManagement: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Procenat Popusta (%)
+                Tip Popusta
+              </label>
+              <select
+                value={formData.discount_type}
+                onChange={(e) => setFormData({ ...formData, discount_type: e.target.value as 'percentage' | 'fixed' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="percentage">Procenat (%)</option>
+                <option value="fixed">Fiksna suma (RSD)</option>
+              </select>
+            </div>
+
+            {formData.discount_type === 'percentage' ? (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Procenat Popusta (%)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={formData.discount_percentage}
+                  onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="20"
+                  required
+                />
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fiksna Suma (RSD)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.fixed_amount}
+                  onChange={(e) => setFormData({ ...formData, fixed_amount: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="500"
+                  required
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Maksimalan Broj Korišćenja
               </label>
               <input
                 type="number"
                 min="1"
-                max="100"
-                value={formData.discount_percentage}
-                onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value })}
+                value={formData.max_usage}
+                onChange={(e) => setFormData({ ...formData, max_usage: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="20"
-                required
+                placeholder="Neograničeno"
               />
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-end">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Status Aktivnosti
               </label>
@@ -203,7 +260,7 @@ const DiscountManagement: React.FC = () => {
               </div>
             </div>
 
-            <div className="md:col-span-3 flex justify-end space-x-3">
+            <div className="md:col-span-4 flex justify-end space-x-3">
               <button
                 type="button"
                 onClick={resetForm}
@@ -233,7 +290,10 @@ const DiscountManagement: React.FC = () => {
                   Kod
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Popust
+                  Tip/Vrednost
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Korišćenje
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -255,8 +315,25 @@ const DiscountManagement: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {code.discount_percentage}%
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-900">
+                        {code.discount_type === 'percentage' 
+                          ? `${code.discount_percentage}%` 
+                          : `${code.fixed_amount} RSD`}
+                      </div>
+                      <div className="text-gray-500">
+                        {code.discount_type === 'percentage' ? 'Procenat' : 'Fiksno'}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-900">
+                        {code.usage_count}{code.max_usage ? `/${code.max_usage}` : ''}
+                      </div>
+                      <div className="text-gray-500">
+                        {code.max_usage ? 'Ograničeno' : 'Neograničeno'}
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

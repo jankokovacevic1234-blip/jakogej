@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Filter, Search } from 'lucide-react';
+import { Filter, Search, X, ShoppingCart } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
-import { supabase } from '../lib/supabase';
 
 const HomePage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -10,6 +9,7 @@ const HomePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -124,7 +124,11 @@ const HomePage: React.FC = () => {
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                onViewDetails={setSelectedProduct}
+              />
             ))}
           </div>
         ) : (
@@ -139,6 +143,74 @@ const HomePage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Product Details Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="relative">
+              <img
+                src={selectedProduct.image_url}
+                alt={selectedProduct.name}
+                className="w-full h-64 object-cover rounded-t-xl"
+              />
+              <button
+                onClick={() => setSelectedProduct(null)}
+                className="absolute top-4 right-4 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-2 transition-all"
+              >
+                <X className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    {selectedProduct.name}
+                  </h2>
+                  <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${
+                    selectedProduct.category === 'accounts' ? 'bg-blue-100 text-blue-800' :
+                    selectedProduct.category === 'subscriptions' ? 'bg-green-100 text-green-800' :
+                    'bg-purple-100 text-purple-800'
+                  }`}>
+                    {selectedProduct.category === 'accounts' ? 'Gaming Nalozi' :
+                     selectedProduct.category === 'subscriptions' ? 'Pretplate' : 'Dodaci'}
+                  </span>
+                </div>
+                <div className="text-3xl font-bold text-blue-600">
+                  {selectedProduct.price.toFixed(0)} RSD
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Opis proizvoda</h3>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {selectedProduct.description}
+                </p>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setSelectedProduct(null)}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
+                >
+                  Zatvori
+                </button>
+                <button
+                  onClick={() => {
+                    addToCart(selectedProduct);
+                    setSelectedProduct(null);
+                  }}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>Dodaj u Korpu</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

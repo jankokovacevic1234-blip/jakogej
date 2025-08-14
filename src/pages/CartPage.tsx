@@ -215,9 +215,9 @@ const CartPage: React.FC = () => {
                   <span className="text-gray-600">Međuzbir</span>
                   <span className="font-medium">{subtotal.toFixed(0)} RSD</span>
                 </div>
-                {discount > 0 && (
+                {appliedDiscount && (
                   <div className="flex justify-between text-green-600">
-                    <span>Popust ({discount}%)</span>
+                    <span>Popust ({appliedDiscount.code})</span>
                     <span>-{discountAmount.toFixed(0)} RSD</span>
                   </div>
                 )}

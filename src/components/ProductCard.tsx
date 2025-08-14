@@ -1,13 +1,14 @@
 import React from 'react';
-import { ShoppingCart, Star } from 'lucide-react';
+import { ShoppingCart, Star, Info } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../contexts/CartContext';
 
 interface ProductCardProps {
   product: Product;
+  onViewDetails?: (product: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => {
   const { addToCart } = useCart();
 
   const getCategoryColor = (category: string) => {
@@ -68,13 +69,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="text-2xl font-bold text-blue-600">
             {product.price.toFixed(0)} RSD
           </div>
-          <button
-            onClick={() => addToCart(product)}
-            className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
-          >
-            <ShoppingCart className="w-4 h-4" />
-            <span>Dodaj u Korpu</span>
-          </button>
+          <div className="flex space-x-2">
+            {onViewDetails && (
+              <button
+                onClick={() => onViewDetails(product)}
+                className="flex items-center space-x-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors"
+                title="Pogledaj detalje"
+              >
+                <Info className="w-4 h-4" />
+              </button>
+            )}
+            <button
+              onClick={() => addToCart(product)}
+              className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              <span>Dodaj u Korpu</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

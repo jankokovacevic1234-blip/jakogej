@@ -19,6 +19,8 @@ export interface Order {
   items: CartItem[];
   total_amount: number;
   customer_email: string;
+  discount_code?: string;
+  discount_amount: number;
   status: 'pending' | 'completed' | 'cancelled';
   created_at: string;
 }
@@ -27,6 +29,10 @@ export interface DiscountCode {
   id: string;
   code: string;
   discount_percentage: number;
+  discount_type: 'percentage' | 'fixed';
+  fixed_amount: number;
+  usage_count: number;
+  max_usage: number | null;
   is_active: boolean;
   created_at: string;
 }

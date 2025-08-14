@@ -48,6 +48,8 @@ export type Database = {
           items: any;
           total_amount: number;
           customer_email: string;
+          discount_code: string | null;
+          discount_amount: number;
           status: string;
           created_at: string;
         };
@@ -57,6 +59,8 @@ export type Database = {
           items: any;
           total_amount: number;
           customer_email: string;
+          discount_code?: string | null;
+          discount_amount?: number;
           status?: string;
           created_at?: string;
         };
@@ -66,6 +70,8 @@ export type Database = {
           items?: any;
           total_amount?: number;
           customer_email?: string;
+          discount_code?: string | null;
+          discount_amount?: number;
           status?: string;
           created_at?: string;
         };
@@ -75,6 +81,10 @@ export type Database = {
           id: string;
           code: string;
           discount_percentage: number;
+          discount_type: string;
+          fixed_amount: number;
+          usage_count: number;
+          max_usage: number | null;
           is_active: boolean;
           created_at: string;
         };
@@ -82,6 +92,10 @@ export type Database = {
           id?: string;
           code: string;
           discount_percentage: number;
+          discount_type?: string;
+          fixed_amount?: number;
+          usage_count?: number;
+          max_usage?: number | null;
           is_active?: boolean;
           created_at?: string;
         };
@@ -89,6 +103,10 @@ export type Database = {
           id?: string;
           code?: string;
           discount_percentage?: number;
+          discount_type?: string;
+          fixed_amount?: number;
+          usage_count?: number;
+          max_usage?: number | null;
           is_active?: boolean;
           created_at?: string;
         };
