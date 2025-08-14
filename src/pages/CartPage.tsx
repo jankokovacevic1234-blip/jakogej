@@ -8,6 +8,7 @@ const CartPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [discountCode, setDiscountCode] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [appliedDiscountInfo, setAppliedDiscountInfo] = useState<{code: string, percentage: number, type: string, amount: number} | null>(null);
   const [loading, setLoading] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderCode, setOrderCode] = useState('');
@@ -32,8 +33,26 @@ const CartPage: React.FC = () => {
         return;
       }
 
-      setDiscount(data.discount_percentage);
-      alert(`Discount applied! ${data.discount_percentage}% off`);
+      if (data.discount_type === 'percentage') {
+        setDiscount(data.discount_percentage);
+        setAppliedDiscountInfo({
+          code: data.code,
+          percentage: data.discount_percentage,
+          type: 'percentage',
+          amount: 0
+        });
+        alert(`Popust primenjen! ${data.discount_percentage}% popusta`);
+      } else {
+        const fixedAmount = parseFloat(data.fixed_amount);
+        setDiscount(0);
+        setAppliedDiscountInfo({
+          code: data.code,
+          percentage: 0,
+          type: 'fixed',
+          amount: fixedAmount
+        });
+        alert(`Popust primenjen! ${fixedAmount} RSD popusta`);
+      }
     } catch (error) {
       alert('Error applying discount code');
     }
@@ -125,7 +144,9 @@ const CartPage: React.FC = () => {
   }
 
   const subtotal = getTotalPrice();
-  const discountAmount = subtotal * (discount / 100);
+  const discountAmount = appliedDiscountInfo?.type === 'percentage' 
+    ? subtotal * (discount / 100)
+    : appliedDiscountInfo?.amount || 0;
   const total = subtotal - discountAmount;
 
   return (
@@ -215,9 +236,9 @@ const CartPage: React.FC = () => {
                   <span className="text-gray-600">Međuzbir</span>
                   <span className="font-medium">{subtotal.toFixed(0)} RSD</span>
                 </div>
-                {appliedDiscount && (
+                {appliedDiscountInfo && (
                   <div className="flex justify-between text-green-600">
-                    <span>Popust ({appliedDiscount.code})</span>
+                    <span>Popust ({appliedDiscountInfo.code})</span>
                     <span>-{discountAmount.toFixed(0)} RSD</span>
                   </div>
                 )}
