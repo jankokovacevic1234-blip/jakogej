@@ -329,17 +329,22 @@ const DiscountManagement: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm">
                       <div className="font-medium text-gray-900">
-                        {code.usage_count}{code.max_usage ? `/${code.max_usage}` : ''}
+                        {code.usage_count || 0}{code.max_usage ? `/${code.max_usage}` : ''}
                       </div>
                       <div className="text-gray-500">
-                        {code.max_usage ? 'Ograničeno' : 'Neograničeno'}
+                        {code.max_usage ? 
+                          (code.usage_count >= code.max_usage ? 'Iskorišćeno' : 'Ograničeno') : 
+                          'Neograničeno'
+                        }
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
                       onClick={() => toggleActive(code.id, code.is_active)}
+                      disabled={code.max_usage && code.usage_count >= code.max_usage}
                       className={`flex items-center space-x-2 ${
+                        code.max_usage && code.usage_count >= code.max_usage ? 'text-red-400 cursor-not-allowed' :
                         code.is_active ? 'text-green-600' : 'text-gray-400'
                       }`}
                     >
@@ -349,7 +354,8 @@ const DiscountManagement: React.FC = () => {
                         <ToggleLeft className="w-5 h-5" />
                       )}
                       <span className="text-sm">
-                        {code.is_active ? 'Aktivan' : 'Neaktivan'}
+                        {code.max_usage && code.usage_count >= code.max_usage ? 'Iskorišćeno' :
+                         code.is_active ? 'Aktivan' : 'Neaktivan'}
                       </span>
                     </button>
                   </td>

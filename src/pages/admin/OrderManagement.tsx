@@ -183,6 +183,11 @@ const OrderManagement: React.FC = () => {
                 <div>
                   <label className="text-sm font-medium text-gray-700">Ukupan Iznos:</label>
                   <p className="text-xl font-bold text-gray-900">{selectedOrder.total_amount.toFixed(0)} RSD</p>
+                  {selectedOrder.discount_code && (
+                    <p className="text-sm text-green-600 mt-1">
+                      Popust primenjen: {selectedOrder.discount_code} (-{selectedOrder.discount_amount.toFixed(0)} RSD)
+                    </p>
+                  )}
                 </div>
 
                 <div>

@@ -33,6 +33,12 @@ const CartPage: React.FC = () => {
         return;
       }
 
+      // Check if discount code has reached maximum usage
+      if (data.max_usage && data.usage_count >= data.max_usage) {
+        alert('Ovaj kod za popust je dostigao maksimalan broj korišćenja');
+        return;
+      }
+
       if (data.discount_type === 'percentage') {
         setDiscount(data.discount_percentage);
         setAppliedDiscountInfo({
@@ -63,9 +69,28 @@ const CartPage: React.FC = () => {
 
     setLoading(true);
     const code = generateOrderCode();
-    const total = getTotalPrice() * (1 - discount / 100);
+    const subtotal = getTotalPrice();
+    const discountAmount = appliedDiscountInfo?.type === 'percentage' 
+      ? subtotal * (discount / 100)
+      : appliedDiscountInfo?.amount || 0;
+    const total = subtotal - discountAmount;
 
     try {
+      // If discount code was applied, increment its usage count
+      if (appliedDiscountInfo) {
+        const { error: discountError } = await supabase
+          .from('discount_codes')
+          .update({ 
+            usage_count: supabase.sql`usage_count + 1`
+          })
+          .eq('code', appliedDiscountInfo.code);
+
+        if (discountError) {
+          console.error('Error updating discount usage:', discountError);
+          // Continue with order creation even if discount update fails
+        }
+      }
+
       const { error } = await supabase
         .from('orders')
         .insert({
@@ -73,6 +98,8 @@ const CartPage: React.FC = () => {
           items: items,
           total_amount: total,
           customer_email: email,
+          discount_code: appliedDiscountInfo?.code || null,
+          discount_amount: discountAmount,
           status: 'pending'
         });
 
@@ -81,6 +108,9 @@ const CartPage: React.FC = () => {
       setOrderCode(code);
       setOrderComplete(true);
       clearCart();
+      setDiscount(0);
+      setAppliedDiscountInfo(null);
+      setDiscountCode('');
     } catch (error) {
       console.error('Error creating order:', error);
       alert('Error processing order. Please try again.');
