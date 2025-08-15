@@ -65,6 +65,7 @@ export type Database = {
           customer_email: string;
           discount_code: string | null;
           discount_amount: number;
+          referral_code: string | null;
           status: string;
           created_at: string;
         };
@@ -76,6 +77,7 @@ export type Database = {
           customer_email: string;
           discount_code?: string | null;
           discount_amount?: number;
+          referral_code?: string | null;
           status?: string;
           created_at?: string;
         };
@@ -87,6 +89,7 @@ export type Database = {
           customer_email?: string;
           discount_code?: string | null;
           discount_amount?: number;
+          referral_code?: string | null;
           status?: string;
           created_at?: string;
         };
@@ -123,6 +126,67 @@ export type Database = {
           usage_count?: number;
           max_usage?: number | null;
           is_active?: boolean;
+          created_at?: string;
+        };
+      };
+      referral_users: {
+        Row: {
+          id: string;
+          username: string;
+          email: string;
+          password_hash: string;
+          referral_code: string;
+          credit_balance: number;
+          credit_per_order: number;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          username: string;
+          email: string;
+          password_hash: string;
+          referral_code: string;
+          credit_balance?: number;
+          credit_per_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          username?: string;
+          email?: string;
+          password_hash?: string;
+          referral_code?: string;
+          credit_balance?: number;
+          credit_per_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+        };
+      };
+      referral_orders: {
+        Row: {
+          id: string;
+          referral_user_id: string;
+          order_id: string;
+          credit_earned: number;
+          status: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          referral_user_id: string;
+          order_id: string;
+          credit_earned?: number;
+          status?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          referral_user_id?: string;
+          order_id?: string;
+          credit_earned?: number;
+          status?: string;
           created_at?: string;
         };
       };

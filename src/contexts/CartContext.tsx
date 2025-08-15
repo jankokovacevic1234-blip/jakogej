@@ -45,10 +45,23 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [toastMessage, setToastMessage] = useState('');
 
   const addToCart = (product: Product) => {
+    // Check stock availability
+    if (product.track_stock && product.stock_quantity <= 0) {
+      setToastMessage(`${product.name} nije dostupan na stanju!`);
+      setShowToast(true);
+      return;
+    }
+
     let isNewItem = false;
     setItems(prev => {
       const existingItem = prev.find(item => item.product.id === product.id);
       if (existingItem) {
+        // Check if adding one more would exceed stock
+        if (product.track_stock && existingItem.quantity >= product.stock_quantity) {
+          setToastMessage(`Maksimalna količina za ${product.name} je ${product.stock_quantity}!`);
+          setShowToast(true);
+          return prev; // Don't add more
+        }
         return prev.map(item =>
           item.product.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
@@ -59,9 +72,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       return [...prev, { product, quantity: 1 }];
     });
     
-    // Show toast notification
-    setToastMessage(`${product.name} dodan u korpu!`);
-    setShowToast(true);
+    // Only show success toast if we actually added the item
+    if (isNewItem || (!product.track_stock || product.stock_quantity > 1)) {
+      setToastMessage(`${product.name} dodan u korpu!`);
+      setShowToast(true);
+    }
   };
 
   const removeFromCart = (productId: string) => {
@@ -73,6 +88,15 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       removeFromCart(productId);
       return;
     }
+    
+    // Check stock limit when updating quantity
+    const product = items.find(item => item.product.id === productId)?.product;
+    if (product?.track_stock && quantity > product.stock_quantity) {
+      setToastMessage(`Maksimalna količina za ${product.name} je ${product.stock_quantity}!`);
+      setShowToast(true);
+      return;
+    }
+    
     setItems(prev =>
       prev.map(item =>
         item.product.id === productId ? { ...item, quantity } : item

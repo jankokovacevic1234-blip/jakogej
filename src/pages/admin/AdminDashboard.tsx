@@ -16,6 +16,7 @@ import OrderManagement from './OrderManagement';
 import DiscountManagement from './DiscountManagement';
 import FakeDiscountManagement from './FakeDiscountManagement';
 import StockManagement from './StockManagement';
+import ReferralManagement from './ReferralManagement';
 import { supabase } from '../../lib/supabase';
 
 const AdminDashboard: React.FC = () => {
@@ -99,6 +100,7 @@ const AdminDashboard: React.FC = () => {
     { id: 'orders', name: 'Porudžbine', icon: ShoppingCart },
     { id: 'discounts', name: 'Kodovi za Popust', icon: Settings },
     { id: 'fake-discounts', name: 'Lažni Popust', icon: Package },
+    { id: 'referrals', name: 'Referral Sistem', icon: Users },
   ];
 
   const renderContent = () => {
@@ -113,6 +115,8 @@ const AdminDashboard: React.FC = () => {
         return <DiscountManagement />;
       case 'fake-discounts':
         return <FakeDiscountManagement />;
+      case 'referrals':
+        return <ReferralManagement />;
       default:
         return (
           <div className="space-y-6">
