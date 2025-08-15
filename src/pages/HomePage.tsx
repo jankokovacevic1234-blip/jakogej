@@ -24,23 +24,22 @@ const HomePage: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      // Proverava da li je Supabase konfigurisan
-      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        console.warn('Supabase nije konfigurisan, koristim test podatke');
-        setProducts(getFallbackProducts());
-        return;
-      }
-
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProducts(data || []);
+      
+      if (data && data.length > 0) {
+        setProducts(data);
+      } else {
+        console.warn('Nema proizvoda u bazi, koristim fallback proizvode');
+        setProducts(getFallbackProducts());
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
-      // Ako ima greška sa bazom, koristi fallback proizvode
+      console.warn('Greška sa bazom, koristim fallback proizvode');
       setProducts(getFallbackProducts());
     } finally {
       setLoading(false);
