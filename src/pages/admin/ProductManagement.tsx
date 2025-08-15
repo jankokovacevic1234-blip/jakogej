@@ -13,7 +13,10 @@ const ProductManagement: React.FC = () => {
     description: '',
     price: '',
     category: 'accounts' as 'accounts' | 'subscriptions' | 'addons',
-    image_url: ''
+    image_url: '',
+    stock_quantity: '100',
+    track_stock: true,
+    low_stock_threshold: '5'
   });
 
   useEffect(() => {
@@ -42,7 +45,10 @@ const ProductManagement: React.FC = () => {
       description: '',
       price: '',
       category: 'accounts',
-      image_url: ''
+      image_url: '',
+      stock_quantity: '100',
+      track_stock: true,
+      low_stock_threshold: '5'
     });
     setEditingProduct(null);
     setShowAddForm(false);
@@ -56,7 +62,10 @@ const ProductManagement: React.FC = () => {
       description: formData.description,
       price: parseFloat(formData.price),
       category: formData.category,
-      image_url: formData.image_url || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg'
+      image_url: formData.image_url || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg',
+      stock_quantity: parseInt(formData.stock_quantity) || 100,
+      track_stock: formData.track_stock,
+      low_stock_threshold: parseInt(formData.low_stock_threshold) || 5
     };
 
     try {
@@ -90,7 +99,10 @@ const ProductManagement: React.FC = () => {
       description: product.description,
       price: product.price.toString(),
       category: product.category,
-      image_url: product.image_url
+      image_url: product.image_url,
+      stock_quantity: product.stock_quantity?.toString() || '100',
+      track_stock: product.track_stock || true,
+      low_stock_threshold: product.low_stock_threshold?.toString() || '5'
     });
     setShowAddForm(true);
   };
@@ -205,6 +217,53 @@ const ProductManagement: React.FC = () => {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Početni Stock
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={formData.stock_quantity}
+                onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="100"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Prag Upozorenja
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={formData.low_stock_threshold}
+                onChange={(e) => setFormData({ ...formData, low_stock_threshold: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="5"
+              />
+            </div>
+
+            <div className="flex items-end">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Prati Stock
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.track_stock}
+                    onChange={(e) => setFormData({ ...formData, track_stock: e.target.checked })}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm text-gray-700">
+                    {formData.track_stock ? 'Aktivno' : 'Neaktivno'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Opis
@@ -254,6 +313,9 @@ const ProductManagement: React.FC = () => {
                   Cena
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Stock
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Akcije
                 </th>
               </tr>
@@ -287,6 +349,26 @@ const ProductManagement: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {product.price.toFixed(0)} RSD
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {product.track_stock ? (
+                      <div className="text-sm">
+                        <div className={`font-medium ${
+                          product.stock_quantity <= 0 ? 'text-red-600' :
+                          product.stock_quantity <= product.low_stock_threshold ? 'text-orange-600' :
+                          'text-green-600'
+                        }`}>
+                          {product.stock_quantity}
+                        </div>
+                        <div className="text-gray-500">
+                          {product.stock_quantity <= 0 ? 'Nema na stanju' :
+                           product.stock_quantity <= product.low_stock_threshold ? 'Malo stanje' :
+                           'Na stanju'}
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">Ne prati se</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                     <button

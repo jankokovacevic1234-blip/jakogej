@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, Star, Info } from 'lucide-react';
+import { ShoppingCart, Star, Info, Package } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../contexts/CartContext';
 
@@ -10,6 +10,9 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => {
   const { addToCart } = useCart();
+
+  const isOutOfStock = product.track_stock && product.stock_quantity <= 0;
+  const isLowStock = product.track_stock && product.stock_quantity <= product.low_stock_threshold && product.stock_quantity > 0;
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -48,6 +51,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
         <span className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(product.category)}`}>
           {getCategoryLabel(product.category)}
         </span>
+        {product.show_fake_discount && product.original_price && product.original_price > product.price && (
+          <span className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            -{Math.round(((product.original_price - product.price) / product.original_price) * 100)}%
+          </span>
+        )}
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <span className="bg-red-600 text-white px-3 py-1 rounded-lg font-bold">NEMA NA STANJU</span>
+          </div>
+        )}
       </div>
 
       <div className="p-6">
@@ -64,6 +77,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
           {product.description}
         </p>
+
+        {/* Stock info */}
+        {product.track_stock && (
+          <div className="mb-3">
+            {isOutOfStock ? (
+              <div className="flex items-center space-x-2 text-red-600">
+                <Package className="w-4 h-4" />
+                <span className="text-sm font-medium">Nema na stanju</span>
+              </div>
+            ) : isLowStock ? (
+              <div className="flex items-center space-x-2 text-orange-600">
+                <Package className="w-4 h-4" />
+                <span className="text-sm font-medium">Poslednji komadi ({product.stock_quantity})</span>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 text-green-600">
+                <Package className="w-4 h-4" />
+                <span className="text-sm font-medium">Na stanju ({product.stock_quantity})</span>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="flex items-center justify-between">
           <div className="text-2xl font-bold text-blue-600">
@@ -92,10 +127,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
             )}
             <button
               onClick={() => addToCart(product)}
-              className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+              disabled={isOutOfStock}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors font-medium ${
+                isOutOfStock 
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
             >
               <ShoppingCart className="w-4 h-4" />
-              <span>Dodaj u Korpu</span>
+              <span>{isOutOfStock ? 'Nema na stanju' : 'Dodaj u Korpu'}</span>
             </button>
           </div>
         </div>

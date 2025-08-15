@@ -15,6 +15,7 @@ import ProductManagement from './ProductManagement';
 import OrderManagement from './OrderManagement';
 import DiscountManagement from './DiscountManagement';
 import FakeDiscountManagement from './FakeDiscountManagement';
+import StockManagement from './StockManagement';
 import { supabase } from '../../lib/supabase';
 
 const AdminDashboard: React.FC = () => {
@@ -94,6 +95,7 @@ const AdminDashboard: React.FC = () => {
   const tabs = [
     { id: 'overview', name: 'Pregled', icon: BarChart3 },
     { id: 'products', name: 'Proizvodi', icon: Package },
+    { id: 'stock', name: 'Stock Upravljanje', icon: Package },
     { id: 'orders', name: 'Porudžbine', icon: ShoppingCart },
     { id: 'discounts', name: 'Kodovi za Popust', icon: Settings },
     { id: 'fake-discounts', name: 'Lažni Popust', icon: Package },
@@ -103,6 +105,8 @@ const AdminDashboard: React.FC = () => {
     switch (activeTab) {
       case 'products':
         return <ProductManagement />;
+      case 'stock':
+        return <StockManagement />;
       case 'orders':
         return <OrderManagement />;
       case 'discounts':

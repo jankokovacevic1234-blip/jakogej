@@ -23,6 +23,9 @@ export type Database = {
           created_at: string;
           original_price: number;
           show_fake_discount: boolean;
+          stock_quantity: number;
+          track_stock: boolean;
+          low_stock_threshold: number;
         };
         Insert: {
           id?: string;
@@ -34,6 +37,9 @@ export type Database = {
           created_at?: string;
           original_price?: number;
           show_fake_discount?: boolean;
+          stock_quantity?: number;
+          track_stock?: boolean;
+          low_stock_threshold?: number;
         };
         Update: {
           id?: string;
@@ -45,6 +51,9 @@ export type Database = {
           created_at?: string;
           original_price?: number;
           show_fake_discount?: boolean;
+          stock_quantity?: number;
+          track_stock?: boolean;
+          low_stock_threshold?: number;
         };
       };
       orders: {
