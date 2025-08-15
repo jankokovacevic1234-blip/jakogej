@@ -1,6 +1,20 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Product, CartItem } from '../types';
 
+// Toast notification component
+const Toast: React.FC<{ message: string; onClose: () => void }> = ({ message, onClose }) => {
+  React.useEffect(() => {
+    const timer = setTimeout(onClose, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in">
+      {message}
+    </div>
+  );
+};
+
 interface CartContextType {
   items: CartItem[];
   addToCart: (product: Product) => void;
@@ -27,8 +41,11 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const addToCart = (product: Product) => {
+    let isNewItem = false;
     setItems(prev => {
       const existingItem = prev.find(item => item.product.id === product.id);
       if (existingItem) {
@@ -38,8 +55,13 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             : item
         );
       }
+      isNewItem = true;
       return [...prev, { product, quantity: 1 }];
     });
+    
+    // Show toast notification
+    setToastMessage(`${product.name} dodan u korpu!`);
+    setShowToast(true);
   };
 
   const removeFromCart = (productId: string) => {
@@ -81,6 +103,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       getTotalItems
     }}>
       {children}
+      {showToast && (
+        <Toast 
+          message={toastMessage} 
+          onClose={() => setShowToast(false)} 
+        />
+      )}
     </CartContext.Provider>
   );
 };

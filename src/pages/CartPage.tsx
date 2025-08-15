@@ -92,15 +92,22 @@ const CartPage: React.FC = () => {
 
       // CRITICAL: Update discount usage count AFTER successful order creation
       if (appliedDiscountInfo) {
-        const { error: discountError } = await supabase
+        const { data: currentDiscount, error: fetchError } = await supabase
           .from('discount_codes')
-          .update({ 
-            usage_count: supabase.sql`usage_count + 1`
-          })
+          .select('usage_count')
           .eq('code', appliedDiscountInfo.code);
 
-        if (discountError) {
-          console.error('Error updating discount usage:', discountError);
+        if (!fetchError && currentDiscount && currentDiscount[0]) {
+          const { error: updateError } = await supabase
+            .from('discount_codes')
+            .update({ 
+              usage_count: currentDiscount[0].usage_count + 1
+            })
+            .eq('code', appliedDiscountInfo.code);
+
+          if (updateError) {
+            console.error('Error updating discount usage:', updateError);
+          }
         }
       }
 

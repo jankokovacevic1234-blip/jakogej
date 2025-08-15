@@ -3,6 +3,7 @@ import { Filter, Search, X, ShoppingCart } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
 import { supabase } from '../lib/supabase';
+import { useCart } from '../contexts/CartContext';
 
 const HomePage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,6 +12,7 @@ const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetchProducts();
