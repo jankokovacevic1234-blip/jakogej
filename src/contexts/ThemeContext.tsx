@@ -24,30 +24,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('gmshop-theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
     const shouldUseDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
     
-    if (shouldUseDark) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setIsDarkMode(false);
-      document.documentElement.classList.remove('dark');
-    }
+    setIsDarkMode(shouldUseDark);
+    document.documentElement.classList.toggle('dark', shouldUseDark);
   }, []);
 
   const toggleDarkMode = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     
-    if (newMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('gmshop-theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('gmshop-theme', 'light');
-    }
+    document.documentElement.classList.toggle('dark', newMode);
+    localStorage.setItem('gmshop-theme', newMode ? 'dark' : 'light');
   };
 
   return (

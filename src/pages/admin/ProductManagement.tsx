@@ -57,6 +57,11 @@ const ProductManagement: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!formData.name.trim() || !formData.description.trim() || !formData.price) {
+      alert('Molimo popunite sva obavezna polja');
+      return;
+    }
+    
     const productData = {
       name: formData.name,
       description: formData.description,
@@ -76,19 +81,21 @@ const ProductManagement: React.FC = () => {
           .eq('id', editingProduct.id);
         
         if (error) throw error;
+        alert('Proizvod je uspešno ažuriran!');
       } else {
         const { error } = await supabase
           .from('products')
           .insert(productData);
         
         if (error) throw error;
+        alert('Proizvod je uspešno dodan!');
       }
 
       fetchProducts();
       resetForm();
     } catch (error) {
       console.error('Error saving product:', error);
-      alert('Error saving product');
+      alert('Greška pri čuvanju proizvoda');
     }
   };
 

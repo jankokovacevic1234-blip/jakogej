@@ -33,6 +33,8 @@ const HomePage: React.FC = () => {
       setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
+      // Show user-friendly error message
+      alert('Greška pri učitavanju proizvoda. Molimo pokušajte ponovo.');
     } finally {
       setLoading(false);
     }

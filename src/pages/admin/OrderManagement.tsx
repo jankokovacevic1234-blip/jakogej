@@ -57,9 +57,10 @@ const OrderManagement: React.FC = () => {
 
       if (error) throw error;
       fetchOrders();
+      alert(`Status porudžbine je promenjen na: ${status === 'completed' ? 'završeno' : status === 'cancelled' ? 'otkazano' : 'na čekanju'}`);
     } catch (error) {
       console.error('Error updating order:', error);
-      alert('Error updating order status');
+      alert('Greška pri ažuriranju statusa porudžbine');
     }
   };
 

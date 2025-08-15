@@ -127,6 +127,8 @@ const CartPage: React.FC = () => {
                 console.error('Error creating referral order:', referralOrderError);
               }
             }
+          } else {
+            console.warn('Referral code not found or inactive:', referralCode);
           }
         } catch (referralError) {
           console.error('Error processing referral:', referralError);

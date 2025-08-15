@@ -16,6 +16,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
+    
+    // Check if item already exists in cart and would exceed stock
+    const existingItem = items?.find(item => item.product.id === product.id);
+    if (product.track_stock && existingItem) {
+      const newQuantity = existingItem.quantity + 1;
+      if (newQuantity > product.stock_quantity) {
+        alert(`Maksimalna količina za ${product.name} je ${product.stock_quantity}!`);
+        return;
+      }
+    }
+    
     addToCart(product);
   };
 

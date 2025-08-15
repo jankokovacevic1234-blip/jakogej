@@ -175,6 +175,9 @@ const ReferralManagement: React.FC = () => {
 
   const updateOrderStatus = async (orderId: string, status: 'approved' | 'rejected') => {
     try {
+      const order = referralOrders.find(o => o.id === orderId);
+      if (!order) return;
+
       const { error } = await supabase
         .from('referral_orders')
         .update({ status })
@@ -184,30 +187,29 @@ const ReferralManagement: React.FC = () => {
 
       // If approved, add credit to user's balance
       if (status === 'approved') {
-        const order = referralOrders.find(o => o.id === orderId);
-        if (order) {
-          // First get current balance
-          const { data: userData, error: fetchError } = await supabase
+        // First get current balance
+        const { data: userData, error: fetchError } = await supabase
+          .from('referral_users')
+          .select('credit_balance')
+          .eq('id', order.referral_user_id)
+          .single();
+
+        if (fetchError) throw fetchError;
+
+        if (userData) {
+          const newBalance = userData.credit_balance + order.credit_earned;
+          const { error: updateError } = await supabase
             .from('referral_users')
-            .select('credit_balance')
+            .update({ credit_balance: newBalance })
             .eq('id', order.referral_user_id);
 
-          if (fetchError) throw fetchError;
-
-          if (userData && userData[0]) {
-            const newBalance = userData[0].credit_balance + order.credit_earned;
-            const { error: updateError } = await supabase
-              .from('referral_users')
-              .update({ credit_balance: newBalance })
-              .eq('id', order.referral_user_id);
-
-            if (updateError) throw updateError;
-          }
+          if (updateError) throw updateError;
         }
       }
 
       fetchReferralOrders();
       fetchReferralUsers();
+      alert(`Porudžbina je uspešno ${status === 'approved' ? 'odobrena' : 'odbijena'}!`);
     } catch (error) {
       console.error('Error updating order status:', error);
       alert('Greška pri ažuriranju statusa porudžbine');
