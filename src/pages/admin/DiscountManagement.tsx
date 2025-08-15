@@ -56,7 +56,7 @@ const DiscountManagement: React.FC = () => {
     const codeData = {
       code: formData.code.toUpperCase(),
       discount_type: formData.discount_type,
-      discount_percentage: parseFloat(formData.discount_percentage),
+      discount_percentage: formData.discount_type === 'percentage' ? parseFloat(formData.discount_percentage) : 0,
       fixed_amount: parseFloat(formData.fixed_amount) || 0,
       max_usage: formData.max_usage ? parseInt(formData.max_usage) : null,
       is_active: formData.is_active

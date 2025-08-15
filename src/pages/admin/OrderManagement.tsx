@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { Trash2, Eye, CheckCircle, XCircle, Search } from 'lucide-react';
 import { Order } from '../../types';
 import { supabase } from '../../lib/supabase';
 
 const OrderManagement: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  useEffect(() => {
+    filterOrders();
+  }, [orders, searchQuery]);
 
   const fetchOrders = async () => {
     try {
@@ -21,11 +27,25 @@ const OrderManagement: React.FC = () => {
 
       if (error) throw error;
       setOrders(data || []);
+      setFilteredOrders(data || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterOrders = () => {
+    if (!searchQuery) {
+      setFilteredOrders(orders);
+      return;
+    }
+
+    const filtered = orders.filter(order =>
+      order.order_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.customer_email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredOrders(filtered);
   };
 
   const updateOrderStatus = async (orderId: string, status: 'pending' | 'completed' | 'cancelled') => {
@@ -87,7 +107,21 @@ const OrderManagement: React.FC = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Upravljanje Porudžbinama</h2>
         <div className="text-sm text-gray-600">
-          Ukupno Porudžbina: {orders.length}
+          Prikazano: {filteredOrders.length} od {orders.length}
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="bg-white rounded-xl shadow-lg p-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Pretražite po kodu porudžbine ili email adresi..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
       </div>
 
@@ -98,7 +132,7 @@ const OrderManagement: React.FC = () => {
             <h3 className="text-lg font-bold text-gray-900">Sve Porudžbine</h3>
           </div>
           <div className="max-h-96 overflow-y-auto">
-            {orders.map((order) => (
+            {filteredOrders.map((order) => (
               <div
                 key={order.id}
                 className={`p-4 border-b hover:bg-gray-50 cursor-pointer ${
@@ -125,7 +159,12 @@ const OrderManagement: React.FC = () => {
                 </div>
               </div>
             ))}
-            {orders.length === 0 && (
+            {filteredOrders.length === 0 && searchQuery && (
+              <div className="p-8 text-center text-gray-500">
+                Nema porudžbina koje odgovaraju pretrazi "{searchQuery}"
+              </div>
+            )}
+            {orders.length === 0 && !searchQuery && (
               <div className="p-8 text-center text-gray-500">
                 Nema pronađenih porudžbina
               </div>
