@@ -34,6 +34,7 @@ const ReferralManagement: React.FC = () => {
     username: '',
     email: '',
     password: '',
+    referral_code: '',
     credit_per_order: '50',
     is_active: true
   });
@@ -85,6 +86,7 @@ const ReferralManagement: React.FC = () => {
       username: '',
       email: '',
       password: '',
+      referral_code: '',
       credit_per_order: '50',
       is_active: true
     });
@@ -95,11 +97,43 @@ const ReferralManagement: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Check if custom referral code is provided and validate it
+    let finalReferralCode = formData.referral_code.trim();
+    
+    if (finalReferralCode) {
+      // Validate custom referral code format
+      if (!/^[A-Z0-9-_]{3,20}$/i.test(finalReferralCode)) {
+        alert('Referral kod mora da sadrži samo slova, brojeve, crtice i podvlake (3-20 karaktera)');
+        return;
+      }
+      
+      // Check if custom referral code already exists (only if not editing the same user)
+      try {
+        const { data: existingCode, error } = await supabase
+          .from('referral_users')
+          .select('id')
+          .eq('referral_code', finalReferralCode.toUpperCase())
+          .single();
+
+        if (!error && existingCode && (!editingUser || existingCode.id !== editingUser.id)) {
+          alert('Ovaj referral kod već postoji. Molimo izaberite drugi.');
+          return;
+        }
+      } catch (error) {
+        // If no existing code found, that's good
+      }
+      
+      finalReferralCode = finalReferralCode.toUpperCase();
+    } else {
+      // Generate automatic code if no custom code provided
+      finalReferralCode = editingUser?.referral_code || generateReferralCode();
+    }
+    
     const userData = {
       username: formData.username,
       email: formData.email,
       password_hash: formData.password, // In production, hash this properly
-      referral_code: editingUser?.referral_code || generateReferralCode(),
+      referral_code: finalReferralCode,
       credit_per_order: parseFloat(formData.credit_per_order),
       is_active: formData.is_active
     };
@@ -135,6 +169,7 @@ const ReferralManagement: React.FC = () => {
       username: user.username,
       email: user.email,
       password: '', // Don't show password
+      referral_code: user.referral_code,
       credit_per_order: user.credit_per_order.toString(),
       is_active: user.is_active
     });
@@ -336,6 +371,22 @@ const ReferralManagement: React.FC = () => {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Custom Referral Kod (opciono)
+              </label>
+              <input
+                type="text"
+                value={formData.referral_code}
+                onChange={(e) => setFormData({ ...formData, referral_code: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono uppercase"
+                placeholder="npr. MOJ-KOD-123"
+                maxLength={20}
+              />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Ostavite prazno za automatski generisan kod. Samo slova, brojevi, crtice i podvlake (3-20 karaktera).
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Kredit po Porudžbini (RSD)
