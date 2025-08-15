@@ -186,14 +186,23 @@ const ReferralManagement: React.FC = () => {
       if (status === 'approved') {
         const order = referralOrders.find(o => o.id === orderId);
         if (order) {
-          const { error: creditError } = await supabase
+          // First get current balance
+          const { data: userData, error: fetchError } = await supabase
             .from('referral_users')
-            .update({ 
-              credit_balance: supabase.raw(`credit_balance + ${order.credit_earned}`)
-            })
+            .select('credit_balance')
             .eq('id', order.referral_user_id);
 
-          if (creditError) throw creditError;
+          if (fetchError) throw fetchError;
+
+          if (userData && userData[0]) {
+            const newBalance = userData[0].credit_balance + order.credit_earned;
+            const { error: updateError } = await supabase
+              .from('referral_users')
+              .update({ credit_balance: newBalance })
+              .eq('id', order.referral_user_id);
+
+            if (updateError) throw updateError;
+          }
         }
       }
 
@@ -500,17 +509,23 @@ const ReferralManagement: React.FC = () => {
                 {referralOrders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {new Date(order.created_at).toLocaleDateString()}
+                      {new Date(order.created_at).toLocaleDateString('sr-RS')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {order.referral_user?.username || 'N/A'}
+                      {(order as any).referral_user?.username || 'N/A'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600 dark:text-green-400">
                       {order.credit_earned.toFixed(0)} RSD
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
-                        {order.status}
+                      <span className={`inline-flex items-center space-x-1 px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                        {order.status === 'pending' && <Clock className="w-3 h-3" />}
+                        {order.status === 'approved' && <CheckCircle className="w-3 h-3" />}
+                        {order.status === 'rejected' && <XCircle className="w-3 h-3" />}
+                        <span>
+                          {order.status === 'pending' ? 'Na čekanju' : 
+                           order.status === 'approved' ? 'Odobreno' : 'Odbačeno'}
+                        </span>
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
@@ -518,17 +533,22 @@ const ReferralManagement: React.FC = () => {
                         <>
                           <button
                             onClick={() => updateOrderStatus(order.id, 'approved')}
-                            className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                            className="bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 text-green-800 dark:text-green-200 px-2 py-1 rounded text-xs font-medium transition-colors"
                           >
                             Odobri
                           </button>
                           <button
                             onClick={() => updateOrderStatus(order.id, 'rejected')}
-                            className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                            className="bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 text-red-800 dark:text-red-200 px-2 py-1 rounded text-xs font-medium transition-colors"
                           >
                             Odbaci
                           </button>
                         </>
+                      )}
+                      {order.status !== 'pending' && (
+                        <span className="text-gray-500 dark:text-gray-400 text-xs">
+                          {order.status === 'approved' ? 'Odobreno' : 'Odbačeno'}
+                        </span>
                       )}
                     </td>
                   </tr>
@@ -541,6 +561,7 @@ const ReferralManagement: React.FC = () => {
             <div className="p-8 text-center text-gray-500 dark:text-gray-400">
               <DollarSign className="w-12 h-12 mx-auto mb-4 text-gray-400" />
               <p>Nema referral porudžbina.</p>
+              <p className="text-sm mt-2">Referral porudžbine će se pojaviti ovde kada kupci koriste referral kodove.</p>
             </div>
           )}
         </div>

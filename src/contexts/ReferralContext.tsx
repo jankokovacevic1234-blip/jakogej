@@ -96,7 +96,10 @@ export const ReferralProvider: React.FC<ReferralProviderProps> = ({ children }) 
     try {
       const { data, error } = await supabase
         .from('referral_orders')
-        .select('*')
+        .select(`
+          *,
+          orders!inner(order_code, total_amount, customer_email)
+        `)
         .eq('referral_user_id', currentUser.id)
         .order('created_at', { ascending: false });
 

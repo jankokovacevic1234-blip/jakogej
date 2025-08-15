@@ -199,7 +199,7 @@ const ReferralDashboard: React.FC = () => {
                 {orders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {new Date(order.created_at).toLocaleDateString()}
+                      {new Date(order.created_at).toLocaleDateString('sr-RS')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                       {order.credit_earned.toFixed(0)} RSD
@@ -207,7 +207,10 @@ const ReferralDashboard: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center space-x-1 px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
                         {getStatusIcon(order.status)}
-                        <span className="capitalize">{order.status}</span>
+                        <span className="capitalize">
+                          {order.status === 'pending' ? 'Na čekanju' : 
+                           order.status === 'approved' ? 'Odobreno' : 'Odbačeno'}
+                        </span>
                       </span>
                     </td>
                   </tr>
@@ -220,6 +223,7 @@ const ReferralDashboard: React.FC = () => {
             <div className="p-8 text-center text-gray-500 dark:text-gray-400">
               <ShoppingCart className="w-12 h-12 mx-auto mb-4 text-gray-400" />
               <p>Još nema porudžbina sa vašim referral kodom.</p>
+              <p className="text-sm mt-2">Podelite vaš referral kod da počnete da zarađujete!</p>
             </div>
           )}
         </div>

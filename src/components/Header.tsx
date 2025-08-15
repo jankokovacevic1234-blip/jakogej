@@ -34,13 +34,13 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={toggleDarkMode}
-              className="p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-all duration-300 hover:scale-110"
+              className="p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-all duration-300 hover:scale-110 border border-gray-200 dark:border-gray-600"
               title={isDarkMode ? 'Svetli režim' : 'Tamni režim'}
             >
               {isDarkMode ? (
-                <Sun className="w-6 h-6 text-yellow-500" />
+                <Sun className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />
               ) : (
-                <Moon className="w-6 h-6 text-gray-700" />
+                <Moon className="w-6 h-6 text-gray-700 dark:text-gray-300" />
               )}
             </button>
             <Link 
