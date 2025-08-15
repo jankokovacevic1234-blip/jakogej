@@ -19,6 +19,12 @@ interface ReferralOrder {
   credit_earned: number;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
+  orders?: {
+    order_code: string;
+    total_amount: number;
+    customer_email: string;
+    created_at: string;
+  };
 }
 
 interface ReferralContextType {
@@ -96,7 +102,7 @@ export const ReferralProvider: React.FC<ReferralProviderProps> = ({ children }) 
         .from('referral_orders')
         .select(`
           *,
-          orders(order_code, total_amount, customer_email, created_at)
+          orders!inner(order_code, total_amount, customer_email, created_at)
         `)
         .eq('referral_user_id', currentUser.id)
         .order('created_at', { ascending: false });

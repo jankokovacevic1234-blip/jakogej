@@ -235,6 +235,13 @@ const OrderManagement: React.FC = () => {
                   <p className="text-gray-900">{new Date(selectedOrder.created_at).toLocaleString()}</p>
                 </div>
 
+                {selectedOrder.referral_code && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Referral Kod:</label>
+                    <p className="text-blue-600 font-mono font-medium">{selectedOrder.referral_code}</p>
+                  </div>
+                )}
+
                 <div>
                   <label className="text-sm font-medium text-gray-700 mb-2 block">Poručene Stavke:</label>
                   <div className="space-y-3">

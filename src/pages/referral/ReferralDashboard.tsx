@@ -188,6 +188,12 @@ const ReferralDashboard: React.FC = () => {
                     Datum
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Porudžbina
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Vrednost
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Kredit Zarađen
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -200,6 +206,19 @@ const ReferralDashboard: React.FC = () => {
                   <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {new Date(order.created_at).toLocaleDateString('sr-RS')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm">
+                        <div className="font-medium text-gray-900 dark:text-white font-mono">
+                          {(order as any).orders?.order_code || 'N/A'}
+                        </div>
+                        <div className="text-gray-500 dark:text-gray-400 text-xs">
+                          {(order as any).orders?.customer_email || 'N/A'}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 dark:text-blue-400">
+                      {(order as any).orders?.total_amount ? `${(order as any).orders.total_amount.toFixed(0)} RSD` : 'N/A'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                       {order.credit_earned.toFixed(0)} RSD

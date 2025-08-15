@@ -21,6 +21,12 @@ interface ReferralOrder {
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   referral_user?: { username: string };
+  order?: {
+    order_code: string;
+    total_amount: number;
+    customer_email: string;
+    created_at: string;
+  };
 }
 
 const ReferralManagement: React.FC = () => {
@@ -66,7 +72,8 @@ const ReferralManagement: React.FC = () => {
         .from('referral_orders')
         .select(`
           *,
-          referral_user:referral_users(username)
+          referral_user:referral_users(username),
+          order:orders(order_code, total_amount, customer_email, created_at)
         `)
         .order('created_at', { ascending: false });
 
@@ -549,7 +556,13 @@ const ReferralManagement: React.FC = () => {
                     Datum
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Porudžbina
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Referral Korisnik
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Vrednost Porudžbine
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Kredit Zarađen
@@ -568,8 +581,21 @@ const ReferralManagement: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {new Date(order.created_at).toLocaleDateString('sr-RS')}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm">
+                        <div className="font-medium text-gray-900 dark:text-white font-mono">
+                          {(order as any).order?.order_code || 'N/A'}
+                        </div>
+                        <div className="text-gray-500 dark:text-gray-400 text-xs">
+                          {(order as any).order?.customer_email || 'N/A'}
+                        </div>
+                      </div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {(order as any).referral_user?.username || 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 dark:text-blue-400">
+                      {(order as any).order?.total_amount ? `${(order as any).order.total_amount.toFixed(0)} RSD` : 'N/A'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600 dark:text-green-400">
                       {order.credit_earned.toFixed(0)} RSD
