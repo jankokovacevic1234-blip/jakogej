@@ -47,56 +47,7 @@ const HomePage: React.FC = () => {
   };
 
   const getFallbackProducts = (): Product[] => [
-    {
-      id: '1',
-      name: 'Premium Gaming Account',
-      description: 'High-level gaming account with rare items and achievements. Perfect for competitive gaming.',
-      price: 2500,
-      category: 'accounts' as const,
-      image_url: 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg',
-      created_at: new Date().toISOString(),
-      stock_quantity: 10,
-      track_stock: true,
-      low_stock_threshold: 5
-    },
-    {
-      id: '2',
-      name: 'VIP Gaming Account',
-      description: 'Exclusive VIP account with premium features unlocked and special privileges.',
-      price: 4000,
-      category: 'accounts' as const,
-      image_url: 'https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg',
-      created_at: new Date().toISOString(),
-      stock_quantity: 5,
-      track_stock: true,
-      low_stock_threshold: 2,
-      original_price: 5000,
-      show_fake_discount: true
-    },
-    {
-      id: '3',
-      name: 'Game Pass Ultimate',
-      description: '3-month subscription to premium gaming service with access to hundreds of games.',
-      price: 1500,
-      category: 'subscriptions' as const,
-      image_url: 'https://images.pexels.com/photos/1670977/pexels-photo-1670977.jpeg',
-      created_at: new Date().toISOString(),
-      stock_quantity: 20,
-      track_stock: true,
-      low_stock_threshold: 5
-    },
-    {
-      id: '4',
-      name: 'Fortnite V-Bucks Pack',
-      description: '2800 V-Bucks for Fortnite - perfect for skins and battle passes.',
-      price: 1200,
-      category: 'addons' as const,
-      image_url: 'https://images.pexels.com/photos/1174746/pexels-photo-1174746.jpeg',
-      created_at: new Date().toISOString(),
-      stock_quantity: 50,
-      track_stock: true,
-      low_stock_threshold: 10
-    }
+    // Nema fallback proizvoda - koristićemo samo bazu podataka
   ];
 
   const filterProducts = () => {
