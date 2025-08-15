@@ -76,21 +76,6 @@ const CartPage: React.FC = () => {
     const total = subtotal - discountAmount;
 
     try {
-      // If discount code was applied, increment its usage count
-      if (appliedDiscountInfo) {
-        const { error: discountError } = await supabase
-          .from('discount_codes')
-          .update({ 
-            usage_count: supabase.sql`usage_count + 1`
-          })
-          .eq('code', appliedDiscountInfo.code);
-
-        if (discountError) {
-          console.error('Error updating discount usage:', discountError);
-          // Continue with order creation even if discount update fails
-        }
-      }
-
       const { error } = await supabase
         .from('orders')
         .insert({
@@ -104,6 +89,20 @@ const CartPage: React.FC = () => {
         });
 
       if (error) throw error;
+
+      // CRITICAL: Update discount usage count AFTER successful order creation
+      if (appliedDiscountInfo) {
+        const { error: discountError } = await supabase
+          .from('discount_codes')
+          .update({ 
+            usage_count: supabase.sql`usage_count + 1`
+          })
+          .eq('code', appliedDiscountInfo.code);
+
+        if (discountError) {
+          console.error('Error updating discount usage:', discountError);
+        }
+      }
 
       setOrderCode(code);
       setOrderComplete(true);
