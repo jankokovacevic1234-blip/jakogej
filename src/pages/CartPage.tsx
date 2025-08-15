@@ -206,7 +206,19 @@ const CartPage: React.FC = () => {
                       />
                       <div className="flex-1">
                         <h3 className="font-medium text-gray-900">{item.product.name}</h3>
-                        <p className="text-sm text-gray-600">{item.product.price.toFixed(0)} RSD each</p>
+                        <div className="text-sm text-gray-600">
+                          {item.product.show_fake_discount && item.product.original_price && item.product.original_price > item.product.price ? (
+                            <div className="flex items-center space-x-2">
+                              <span className="line-through text-gray-500">{item.product.original_price.toFixed(0)} RSD</span>
+                              <span className="text-red-600 font-medium">{item.product.price.toFixed(0)} RSD</span>
+                              <span className="bg-red-100 text-red-800 px-1 py-0.5 rounded text-xs font-medium">
+                                -{Math.round(((item.product.original_price - item.product.price) / item.product.original_price) * 100)}%
+                              </span>
+                            </div>
+                          ) : (
+                            <span>{item.product.price.toFixed(0)} RSD each</span>
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
