@@ -9,7 +9,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => {
-  const { addToCart } = useCart();
+  const { addToCart, items } = useCart();
 
   const isOutOfStock = product.track_stock && product.stock_quantity <= 0;
   const isLowStock = product.track_stock && product.stock_quantity <= product.low_stock_threshold && product.stock_quantity > 0;
