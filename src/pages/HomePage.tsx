@@ -5,6 +5,9 @@ import { Product } from '../types';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../contexts/CartContext';
 
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+
 const HomePage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -24,6 +27,12 @@ const HomePage: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
+      if (!supabaseUrl || !supabaseAnonKey) {
+        console.warn('Supabase not connected yet');
+        setLoading(false);
+        return;
+      }
+      
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -33,8 +42,7 @@ const HomePage: React.FC = () => {
       setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
-      // Show user-friendly error message
-      alert('Greška pri učitavanju proizvoda. Molimo pokušajte ponovo.');
+      setProducts([]); // Set empty array instead of showing alert
     } finally {
       setLoading(false);
     }

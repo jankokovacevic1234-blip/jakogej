@@ -52,7 +52,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       return;
     }
 
-    let isNewItem = false;
+    let shouldShowToast = false;
     setItems(prev => {
       const existingItem = prev.find(item => item.product.id === product.id);
       if (existingItem) {
@@ -62,18 +62,18 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           setShowToast(true);
           return prev; // Don't add more
         }
+        shouldShowToast = true;
         return prev.map(item =>
           item.product.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      isNewItem = true;
+      shouldShowToast = true;
       return [...prev, { product, quantity: 1 }];
     });
     
-    // Only show success toast if we actually added the item
-    if (isNewItem || (!product.track_stock || product.stock_quantity > 1)) {
+    if (shouldShowToast) {
       setToastMessage(`${product.name} dodan u korpu!`);
       setShowToast(true);
     }

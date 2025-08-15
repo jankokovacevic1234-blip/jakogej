@@ -96,7 +96,7 @@ export const ReferralProvider: React.FC<ReferralProviderProps> = ({ children }) 
         .from('referral_orders')
         .select(`
           *,
-          orders!inner(order_code, total_amount, customer_email, created_at)
+          orders(order_code, total_amount, customer_email, created_at)
         `)
         .eq('referral_user_id', currentUser.id)
         .order('created_at', { ascending: false });

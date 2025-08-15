@@ -70,7 +70,9 @@ const ProductManagement: React.FC = () => {
       image_url: formData.image_url || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg',
       stock_quantity: parseInt(formData.stock_quantity) || 100,
       track_stock: formData.track_stock,
-      low_stock_threshold: parseInt(formData.low_stock_threshold) || 5
+      low_stock_threshold: parseInt(formData.low_stock_threshold) || 5,
+      original_price: null,
+      show_fake_discount: false
     };
 
     try {

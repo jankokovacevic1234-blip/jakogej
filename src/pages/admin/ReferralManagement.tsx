@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Save, X, ToggleLeft, ToggleRight, Users, DollarSign, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, ToggleLeft, ToggleRight, Users, DollarSign, Clock, CheckCircle, XCircle, Copy } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface ReferralUser {
@@ -187,23 +187,27 @@ const ReferralManagement: React.FC = () => {
 
       // If approved, add credit to user's balance
       if (status === 'approved') {
-        // First get current balance
-        const { data: userData, error: fetchError } = await supabase
-          .from('referral_users')
-          .select('credit_balance')
-          .eq('id', order.referral_user_id)
-          .single();
-
-        if (fetchError) throw fetchError;
-
-        if (userData) {
-          const newBalance = userData.credit_balance + order.credit_earned;
-          const { error: updateError } = await supabase
+        try {
+          // First get current balance
+          const { data: userData, error: fetchError } = await supabase
             .from('referral_users')
-            .update({ credit_balance: newBalance })
-            .eq('id', order.referral_user_id);
+            .select('credit_balance')
+            .eq('id', order.referral_user_id)
+            .single();
 
-          if (updateError) throw updateError;
+          if (fetchError) throw fetchError;
+
+          if (userData) {
+            const newBalance = userData.credit_balance + order.credit_earned;
+            const { error: updateError } = await supabase
+              .from('referral_users')
+              .update({ credit_balance: newBalance })
+              .eq('id', order.referral_user_id);
+
+            if (updateError) throw updateError;
+          }
+        } catch (balanceError) {
+          console.error('Error updating user balance:', balanceError);
         }
       }
 
