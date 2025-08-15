@@ -77,9 +77,9 @@ const CartPage: React.FC = () => {
     const total = subtotal - discountAmount;
 
     try {
-      // Proveri da li je Supabase konfigurisan
+      // Proverava da li je Supabase konfigurisan
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        // Simuliraj uspešnu porudžbinu bez baze podataka
+        console.warn('Supabase nije konfigurisan, simuliram porudžbinu');
         setOrderCode(code);
         setOrderComplete(true);
         clearCart();
@@ -87,6 +87,7 @@ const CartPage: React.FC = () => {
         setAppliedDiscountInfo(null);
         setDiscountCode('');
         setReferralCode('');
+        setLoading(false);
         return;
       }
 
