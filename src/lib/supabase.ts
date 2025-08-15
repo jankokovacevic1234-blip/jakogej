@@ -21,6 +21,8 @@ export type Database = {
           category: string;
           image_url: string;
           created_at: string;
+          original_price: number;
+          show_fake_discount: boolean;
         };
         Insert: {
           id?: string;
@@ -30,6 +32,8 @@ export type Database = {
           category: string;
           image_url: string;
           created_at?: string;
+          original_price?: number;
+          show_fake_discount?: boolean;
         };
         Update: {
           id?: string;
@@ -39,6 +43,8 @@ export type Database = {
           category?: string;
           image_url?: string;
           created_at?: string;
+          original_price?: number;
+          show_fake_discount?: boolean;
         };
       };
       orders: {

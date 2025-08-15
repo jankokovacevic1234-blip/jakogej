@@ -6,6 +6,8 @@ export interface Product {
   category: 'accounts' | 'subscriptions' | 'addons';
   image_url: string;
   created_at: string;
+  original_price?: number;
+  show_fake_discount?: boolean;
 }
 
 export interface CartItem {

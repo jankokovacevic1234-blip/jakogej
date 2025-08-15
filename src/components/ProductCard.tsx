@@ -67,7 +67,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
 
         <div className="flex items-center justify-between">
           <div className="text-2xl font-bold text-blue-600">
-            {product.price.toFixed(0)} RSD
+            {product.show_fake_discount && product.original_price && product.original_price > product.price ? (
+              <div className="flex flex-col">
+                <span className="text-lg text-gray-500 line-through">
+                  {product.original_price.toFixed(0)} RSD
+                </span>
+                <span className="text-2xl font-bold text-red-600">
+                  {product.price.toFixed(0)} RSD
+                </span>
+              </div>
+            ) : (
+              <span>{product.price.toFixed(0)} RSD</span>
+            )}
           </div>
           <div className="flex space-x-2">
             {onViewDetails && (

@@ -14,6 +14,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import ProductManagement from './ProductManagement';
 import OrderManagement from './OrderManagement';
 import DiscountManagement from './DiscountManagement';
+import FakeDiscountManagement from './FakeDiscountManagement';
 import { supabase } from '../../lib/supabase';
 
 const AdminDashboard: React.FC = () => {
@@ -95,6 +96,7 @@ const AdminDashboard: React.FC = () => {
     { id: 'products', name: 'Proizvodi', icon: Package },
     { id: 'orders', name: 'Porudžbine', icon: ShoppingCart },
     { id: 'discounts', name: 'Kodovi za Popust', icon: Settings },
+    { id: 'fake-discounts', name: 'Lažni Popust', icon: Package },
   ];
 
   const renderContent = () => {
@@ -105,6 +107,8 @@ const AdminDashboard: React.FC = () => {
         return <OrderManagement />;
       case 'discounts':
         return <DiscountManagement />;
+      case 'fake-discounts':
+        return <FakeDiscountManagement />;
       default:
         return (
           <div className="space-y-6">
